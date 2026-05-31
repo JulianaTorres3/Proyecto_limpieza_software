@@ -98,7 +98,17 @@
     
     <div class="mt-8 flex justify-end gap-3 pt-6 border-t border-gray-100">
       <button (click)="cancelEdit()" class="px-6 py-2.5 text-gray-600 font-bold hover:bg-gray-100 rounded-lg transition-colors cursor-pointer">Cancelar</button>
-      <button (click)="saveEdit()" class="px-6 py-2.5 bg-black text-white font-bold rounded-lg hover:bg-gray-800 transition-colors shadow-md cursor-pointer">Guardar Cambios</button>
+      <button (click)="saveEdit()"
+              [disabled]="isSaving || isSaveSuccess"
+              [ngClass]="{'bg-green-600 hover:bg-green-700': isSaveSuccess, 'bg-black hover:bg-gray-800': !isSaveSuccess}"
+              class="px-6 py-2.5 text-white font-bold rounded-lg transition-all duration-300 shadow-md cursor-pointer disabled:cursor-not-allowed flex items-center gap-2">
+        <span *ngIf="!isSaving && !isSaveSuccess">Guardar Cambios</span>
+        <span *ngIf="isSaving">Guardando...</span>
+        <span *ngIf="isSaveSuccess" class="flex items-center gap-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+          ¡Guardado!
+        </span>
+      </button>
     </div>
   </div>
 </div>

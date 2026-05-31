@@ -25,4 +25,12 @@ export class BookingService {
   deleteRequest(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${id}`, { responseType: 'text' });
   }
+
+  getStatsByMonth(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/stats/by-month`);
+  }
+
+  getStatsByType(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/stats/by-type`);
+  }
 }

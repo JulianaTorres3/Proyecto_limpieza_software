@@ -73,8 +73,8 @@
         </div>
         
         <div class="mt-4 flex justify-end">
-             <button type="submit" 
-                     [disabled]="bookingForm.invalid || isSubmitting" 
+             <button type="submit"
+                     [disabled]="(bookingForm.invalid || isSubmitting) && !isSuccess"
                      [ngClass]="{'bg-green-600 hover:bg-green-700': isSuccess, 'bg-black hover:bg-gray-800': !isSuccess}"
                      class="text-white px-8 py-3 rounded-md font-bold disabled:bg-gray-400 disabled:cursor-not-allowed transition-all duration-300 cursor-pointer flex items-center justify-center min-w-[200px]">
                <span *ngIf="!isSubmitting && !isSuccess">Reservar Servicio</span>

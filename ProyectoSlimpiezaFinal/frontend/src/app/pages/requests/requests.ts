@@ -12,6 +12,8 @@ export class Requests implements OnInit {
   requests: any[] = [];
   editingId: number | null = null;
   editData: any = {};
+  isSaving = false;
+  isSaveSuccess = false;
   
   constructor(private bookingService: BookingService) {}
 
@@ -41,12 +43,21 @@ export class Requests implements OnInit {
 
   cancelEdit() {
     this.editingId = null;
+    this.isSaving = false;
+    this.isSaveSuccess = false;
   }
 
   saveEdit() {
+    this.isSaving = true;
+    this.isSaveSuccess = false;
     this.bookingService.updateRequest(this.editingId!, this.editData).subscribe(() => {
-      this.editingId = null;
+      this.isSaving = false;
+      this.isSaveSuccess = true;
       this.loadRequests();
+      setTimeout(() => {
+        this.editingId = null;
+        this.isSaveSuccess = false;
+      }, 1500);
     });
   }
 }
