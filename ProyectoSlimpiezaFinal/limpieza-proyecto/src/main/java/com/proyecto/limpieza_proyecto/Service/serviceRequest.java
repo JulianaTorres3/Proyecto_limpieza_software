@@ -20,10 +20,10 @@ public class serviceRequest {
 
     // CREAR solicitud - empieza siempre en PENDIENTE
     public servicio createRequest(servicio request) {
-        if (request.getClientName() == null || request.getClientName().isEmpty()) {
+        if (request.getClientName() == null || request.getClientName().isBlank()) {
             throw new IllegalArgumentException("El nombre del cliente es obligatorio");
         }
-        if (request.getAddress() == null || request.getAddress().isEmpty()) {
+        if (request.getAddress() == null || request.getAddress().isBlank()) {
             throw new IllegalArgumentException("La dirección es obligatoria");
         }
         if (request.getServiceDate() == null) {
@@ -59,7 +59,6 @@ public class serviceRequest {
         existing.setAddress(updatedRequest.getAddress());
         existing.setServiceType(updatedRequest.getServiceType());
         existing.setServiceDate(updatedRequest.getServiceDate());
-        existing.setAdditionalNotes(updatedRequest.getAdditionalNotes());
         return repository.save(existing);
     }
 
