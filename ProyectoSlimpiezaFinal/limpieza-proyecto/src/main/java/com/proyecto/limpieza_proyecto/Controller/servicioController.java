@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/requests")
@@ -63,5 +64,17 @@ public class servicioController {
     @GetMapping("/status/{status}")
     public List<servicio> getByStatus(@PathVariable estado status) {
         return service.getByStatus(status);
+    }
+
+    // GET /api/requests/stats/by-month → Servicios por mes
+    @GetMapping("/stats/by-month")
+    public List<Map<String, Object>> getStatsByMonth() {
+        return service.getStatsByMonth();
+    }
+
+    // GET /api/requests/stats/by-type → Servicios por tipo
+    @GetMapping("/stats/by-type")
+    public List<Map<String, Object>> getStatsByType() {
+        return service.getStatsByType();
     }
 }

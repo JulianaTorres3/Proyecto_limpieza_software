@@ -6,7 +6,9 @@ import com.proyecto.limpieza_proyecto.Repository.serviceRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class serviceRequest {
@@ -92,5 +94,34 @@ public class serviceRequest {
     // BUSCAR por estado
     public List<servicio> getByStatus(estado status) {
         return repository.findByStatus(status);
+    }
+
+    // ESTADÍSTICAS por mes
+    public List<Map<String, Object>> getStatsByMonth() {
+        List<Object[]> rows = repository.countByMonth();
+        List<Map<String, Object>> result = new java.util.ArrayList<>();
+        String[] monthNames = {"", "Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"};
+        for (Object[] row : rows) {
+            Map<String, Object> entry = new LinkedHashMap<>();
+            int year = ((Number) row[0]).intValue();
+            int month = ((Number) row[1]).intValue();
+            entry.put("month", monthNames[month] + " " + year);
+            entry.put("count", ((Number) row[2]).longValue());
+            result.add(entry);
+        }
+        return result;
+    }
+
+    // ESTADÍSTICAS por tipo de servicio
+    public List<Map<String, Object>> getStatsByType() {
+        List<Object[]> rows = repository.countByServiceType();
+        List<Map<String, Object>> result = new java.util.ArrayList<>();
+        for (Object[] row : rows) {
+            Map<String, Object> entry = new LinkedHashMap<>();
+            entry.put("type", row[0].toString());
+            entry.put("count", ((Number) row[1]).longValue());
+            result.add(entry);
+        }
+        return result;
     }
 }

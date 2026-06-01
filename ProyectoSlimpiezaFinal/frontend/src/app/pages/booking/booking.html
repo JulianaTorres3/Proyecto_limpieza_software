@@ -1,0 +1,125 @@
+<div class="max-w-7xl mx-auto px-8 md:px-16 py-16">
+  <!-- Booking Section -->
+  <div class="grid lg:grid-cols-[1fr,1.3fr] gap-16 items-start mb-32">
+    <!-- Left Column: Details -->
+    <div>
+      <div class="rounded-xl overflow-hidden mb-10 shadow-lg border border-gray-100">
+        <img src="/assets/booking_bedroom.png" alt="Bedroom Cleaning" class="w-full h-80 object-cover" />
+      </div>
+      <h1 class="text-4xl font-extrabold mb-6 tracking-tight text-gray-900">Servicio de limpieza a domicilio</h1>
+      <p class="text-gray-500 leading-relaxed text-lg mb-8">
+        Tu hogar, siempre impecable. Nuestra limpieza estándar cubre todo lo esencial: quitar el polvo, aspirar, fregar, limpiar baños, superficies de cocina y más. Ideal para hogares con mucha actividad que buscan un equipo confiable y confiable semana tras semana. Disponible semanal, quincenal o mensualmente.
+      </p>
+    </div>
+
+    <!-- Right Column: Form -->
+    <div class="bg-white rounded-xl p-0 lg:pl-8">
+      
+      <!-- Alertas de Envío -->
+      <div *ngIf="successMessage" class="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded mb-6 font-medium">
+        {{ successMessage }}
+      </div>
+      
+      <div *ngIf="errorMessage" class="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded mb-6 font-medium">
+        {{ errorMessage }}
+      </div>
+
+      <form (ngSubmit)="onSubmit()" #bookingForm="ngForm" class="flex flex-col gap-6">
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2">Nombre completo</label>
+          <input type="text" name="clientName" [(ngModel)]="bookingData.clientName" required placeholder="Nombre" class="w-full border border-gray-200 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-black transition-shadow" />
+        </div>
+        
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2">Teléfono</label>
+          <input type="text" name="phone" [(ngModel)]="bookingData.phone" required placeholder="Ej: 333-210-9563" class="w-full border border-gray-200 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-black transition-shadow" />
+        </div>
+        
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2">Email</label>
+          <input type="email" name="email" [(ngModel)]="bookingData.email" required placeholder="Correo" class="w-full border border-gray-200 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-black transition-shadow" />
+        </div>
+        
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2">Dirección</label>
+          <input type="text" name="address" [(ngModel)]="bookingData.address" required placeholder="E:Cra. 14 #127b-23" class="w-full border border-gray-200 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-black transition-shadow" />
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Tipo de servicio</label>
+            <div class="relative">
+              <select name="serviceType" [(ngModel)]="bookingData.serviceType" required class="w-full border border-gray-200 rounded-md px-4 py-3 appearance-none bg-white focus:outline-none focus:ring-2 focus:ring-black transition-shadow text-gray-700">
+                <option value="HOGAR">Limpieza Hogar</option>
+                <option value="OFICINA">Limpieza Oficina</option>
+                <option value="PROFUNDA">Limpieza Profunda</option>
+                <option value="POST_OBRA">Limpieza Post-Obra / Mudanza</option>
+              </select>
+              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
+                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+              </div>
+            </div>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Fecha del servicio</label>
+            <input type="date" name="serviceDate" [(ngModel)]="bookingData.serviceDate" required class="w-full border border-gray-200 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-black transition-shadow" />
+          </div>
+        </div>
+        
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2">Detalles adicionales</label>
+          <textarea rows="4" name="additionalNotes" [(ngModel)]="bookingData.additionalNotes" placeholder="Escribe aquí cualquier indicación extra" class="w-full border border-gray-200 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-black transition-shadow resize-none"></textarea>
+        </div>
+        
+        <div class="mt-4 flex justify-end">
+             <button type="submit"
+                     [disabled]="(bookingForm.invalid || isSubmitting) && !isSuccess"
+                     [ngClass]="{'bg-green-600 hover:bg-green-700': isSuccess, 'bg-black hover:bg-gray-800': !isSuccess}"
+                     class="text-white px-8 py-3 rounded-md font-bold disabled:bg-gray-400 disabled:cursor-not-allowed transition-all duration-300 cursor-pointer flex items-center justify-center min-w-[200px]">
+               <span *ngIf="!isSubmitting && !isSuccess">Reservar Servicio</span>
+               <span *ngIf="isSubmitting">Procesando...</span>
+               <span *ngIf="isSuccess" class="flex gap-2 items-center">
+                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                 ¡Completado!
+               </span>
+             </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Más servicios -->
+  <div class="border-t border-gray-100 pt-16">
+    <h2 class="text-3xl font-bold mb-10 tracking-tight text-gray-900">Más servicios</h2>
+    
+    <div class="grid md:grid-cols-3 gap-8">
+      <!-- M1 -->
+      <a routerLink="/booking" class="group cursor-pointer block no-underline text-inherit">
+        <div class="h-56 mb-4 overflow-hidden rounded-xl bg-gray-100 shadow-sm border border-gray-100">
+          <img src="/assets/move_service.png" alt="Mudanza" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500" />
+        </div>
+        <h3 class="text-lg font-bold mb-1 text-gray-900 group-hover:text-blue-600 transition-colors">Mudanza</h3>
+        <p class="text-gray-500 text-sm">Cotiza el servicio aquí</p>
+      </a>
+      
+      <!-- M2 -->
+      <a routerLink="/booking" class="group cursor-pointer block no-underline text-inherit">
+        <div class="h-56 mb-4 overflow-hidden rounded-xl bg-gray-100 shadow-sm border border-gray-100">
+          <img src="/assets/home_service.png" alt="Limpieza profunda" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500" />
+        </div>
+        <h3 class="text-lg font-bold mb-1 text-gray-900 group-hover:text-blue-600 transition-colors">Limpieza profunda</h3>
+        <p class="text-gray-500 text-sm">Más información aquí</p>
+      </a>
+      
+      <!-- M3 -->
+      <a routerLink="/booking" class="group cursor-pointer block no-underline text-inherit">
+        <div class="h-56 mb-4 overflow-hidden rounded-xl bg-gray-100 shadow-sm border border-gray-100">
+          <img src="/assets/office_service.png" alt="Post-Evento" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500" />
+        </div>
+        <h3 class="text-lg font-bold mb-1 text-gray-900 group-hover:text-blue-600 transition-colors">Post-Evento</h3>
+        <p class="text-gray-500 text-sm">Cotiza Aquí</p>
+      </a>
+    </div>
+  </div>
+</div>

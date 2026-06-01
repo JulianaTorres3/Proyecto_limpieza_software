@@ -1,0 +1,98 @@
+<div class="max-w-7xl mx-auto px-8 md:px-16 py-16 min-h-[70vh]">
+
+  <div class="mb-10">
+    <h1 class="text-4xl font-extrabold tracking-tight text-gray-900">Estadísticas</h1>
+    <p class="text-gray-500 mt-2">Resumen de actividad de los servicios de limpieza.</p>
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="error" class="bg-red-50 border border-red-200 text-red-700 px-6 py-4 rounded-xl">
+    No se pudo conectar con el servidor. Asegúrate de que el backend esté corriendo en localhost:8080.
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading && !error" class="flex items-center justify-center py-32 text-gray-400 text-lg">
+    Cargando estadísticas...
+  </div>
+
+  <div *ngIf="!loading && !error">
+
+    <!-- Tarjetas de resumen -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-12">
+      <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+        <p class="text-sm font-semibold text-gray-500 mb-1">Total de servicios</p>
+        <p class="text-4xl font-extrabold text-gray-900">{{ totalRequests }}</p>
+      </div>
+      <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+        <p class="text-sm font-semibold text-gray-500 mb-1">Tipos distintos</p>
+        <p class="text-4xl font-extrabold text-gray-900">{{ totalTypes.length }}</p>
+      </div>
+      <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+        <p class="text-sm font-semibold text-gray-500 mb-1">Tipo más solicitado</p>
+        <p class="text-3xl font-extrabold text-indigo-600">{{ topType || '-' }}</p>
+      </div>
+    </div>
+
+    <!-- Gráficos -->
+    <div class="grid lg:grid-cols-[1.6fr,1fr] gap-8">
+
+      <!-- Gráfico de barras por mes -->
+      <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+        <h2 class="text-lg font-bold text-gray-900 mb-1">Servicios por mes</h2>
+        <p class="text-sm text-gray-400 mb-6">Cantidad de solicitudes registradas cada mes.</p>
+        <div *ngIf="monthData.length === 0" class="flex items-center justify-center h-48 text-gray-400">
+          Sin datos suficientes para mostrar.
+        </div>
+        <div [style.display]="monthData.length > 0 ? 'block' : 'none'" style="height: 280px; position: relative;">
+          <canvas #monthChart></canvas>
+        </div>
+      </div>
+
+      <!-- Gráfico de dona por tipo -->
+      <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+        <h2 class="text-lg font-bold text-gray-900 mb-1">Tipos de servicio</h2>
+        <p class="text-sm text-gray-400 mb-6">Distribución de solicitudes por tipo.</p>
+        <div *ngIf="totalTypes.length === 0" class="flex items-center justify-center h-48 text-gray-400">
+          Sin datos suficientes para mostrar.
+        </div>
+        <div [style.display]="totalTypes.length > 0 ? 'block' : 'none'" style="height: 280px; position: relative;">
+          <canvas #typeChart></canvas>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Tabla de desglose por tipo -->
+    <div *ngIf="totalTypes.length > 0" class="mt-8 bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+      <div class="px-6 py-4 border-b border-gray-100">
+        <h2 class="text-lg font-bold text-gray-900">Desglose por tipo de servicio</h2>
+      </div>
+      <table class="w-full text-sm text-left text-gray-600">
+        <thead class="bg-gray-50 text-gray-900">
+          <tr>
+            <th class="px-6 py-3 font-semibold">Tipo</th>
+            <th class="px-6 py-3 font-semibold">Cantidad</th>
+            <th class="px-6 py-3 font-semibold">Porcentaje</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let t of totalTypes" class="border-t border-gray-50 hover:bg-gray-50 transition-colors">
+            <td class="px-6 py-3">
+              <span class="bg-indigo-50 text-indigo-700 px-3 py-1 rounded-full text-xs font-bold">{{ t.type }}</span>
+            </td>
+            <td class="px-6 py-3 font-semibold text-gray-900">{{ t.count }}</td>
+            <td class="px-6 py-3">
+              <div class="flex items-center gap-3">
+                <div class="flex-1 bg-gray-100 rounded-full h-2 max-w-[120px]">
+                  <div class="bg-indigo-500 h-2 rounded-full" [style.width.%]="totalRequests > 0 ? (t.count / totalRequests) * 100 : 0"></div>
+                </div>
+                <span class="text-gray-500 text-xs">{{ totalRequests > 0 ? ((t.count / totalRequests) * 100 | number:'1.0-1') : 0 }}%</span>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
