@@ -11,7 +11,7 @@ export class BookingService {
   constructor(private http: HttpClient) { }
 
   createBooking(data: any): Observable<any> {
-    return this.http.post(this.apiUrl, data, { responseType: 'text' });
+    return this.http.post(this.apiUrl, data);
   }
 
   getRequests(): Observable<any[]> {
@@ -19,11 +19,11 @@ export class BookingService {
   }
 
   updateRequest(id: number, data: any): Observable<any> {
-    return this.http.put(`${this.apiUrl}/${id}`, data, { responseType: 'text' });
+    return this.http.put(`${this.apiUrl}/${id}`, data);
   }
 
   deleteRequest(id: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/${id}`, { responseType: 'text' });
+    return this.http.delete(`${this.apiUrl}/${id}`);
   }
 
   getStatsByMonth(): Observable<any[]> {

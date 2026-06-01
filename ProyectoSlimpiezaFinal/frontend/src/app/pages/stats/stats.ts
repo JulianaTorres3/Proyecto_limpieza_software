@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ElementRef, ViewChild, OnDestroy } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, OnDestroy, ChangeDetectorRef, AfterViewChecked } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BookingService } from '../../services/booking.service';
 import { Chart, registerables } from 'chart.js';
@@ -10,7 +10,7 @@ Chart.register(...registerables);
   imports: [CommonModule],
   templateUrl: './stats.html'
 })
-export class Stats implements OnInit, AfterViewInit, OnDestroy {
+export class Stats implements OnInit, AfterViewChecked, OnDestroy {
   @ViewChild('monthChart') monthChartRef!: ElementRef<HTMLCanvasElement>;
   @ViewChild('typeChart') typeChartRef!: ElementRef<HTMLCanvasElement>;
 
@@ -25,10 +25,9 @@ export class Stats implements OnInit, AfterViewInit, OnDestroy {
 
   monthData: any[] = [];
   typeData: any[] = [];
-  private chartsReady = false;
-  private dataReady = false;
+  private chartsBuilt = false;
 
-  constructor(private bookingService: BookingService) {}
+  constructor(private bookingService: BookingService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
     let monthDone = false;
@@ -56,9 +55,11 @@ export class Stats implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-  ngAfterViewInit() {
-    this.chartsReady = true;
-    if (this.dataReady) this.buildCharts();
+  ngAfterViewChecked() {
+    if (!this.chartsBuilt && !this.loading && this.monthChartRef && this.typeChartRef) {
+      this.chartsBuilt = true;
+      this.buildCharts();
+    }
   }
 
   ngOnDestroy() {
@@ -68,8 +69,7 @@ export class Stats implements OnInit, AfterViewInit, OnDestroy {
 
   private onDataReady() {
     this.loading = false;
-    this.dataReady = true;
-    if (this.chartsReady) this.buildCharts();
+    this.cdr.detectChanges();
   }
 
   private buildCharts() {
