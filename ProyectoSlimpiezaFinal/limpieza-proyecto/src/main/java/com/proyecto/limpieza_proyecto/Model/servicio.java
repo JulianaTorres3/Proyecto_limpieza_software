@@ -31,9 +31,6 @@ public class servicio {
     @Enumerated(EnumType.STRING)
     private estado status;
 
-    // Notas adicionales del cliente
-    private String additionalNotes;
-
     // Al crear una solicitud el estado siempre empieza en PENDIENTE
     @PrePersist
     public void prePersist() {
